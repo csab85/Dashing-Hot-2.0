@@ -3,10 +3,15 @@ using System.Collections.Generic;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Rendering;
 
 public class Movement : MonoBehaviour
 {
     #region VARIABLES
+
+    //imports
+    Transform followTrasnform;
+    Transform meshRootTransform;
 
     //Player stats
     [SerializeField] float acceleration;
@@ -14,7 +19,8 @@ public class Movement : MonoBehaviour
     [SerializeField] float maxVelocity;
 
     //VARS
-    Vector2 direction;
+    Vector2 inputDirection;
+    Vector3 direction;
     float accEscalated;
 
     //STATES
@@ -32,11 +38,10 @@ public class Movement : MonoBehaviour
     public void Walk(InputAction.CallbackContext context)
     {
         //if movemenbt button started
-        if (context.started)
+        if (context.started | context.performed)
         {
-            //update direction and escalate acceleration
-            direction = context.ReadValue<Vector2>();
-            accEscalated = acceleration;
+            //get input direction
+            inputDirection = context.ReadValue<Vector2>();
 
             //set state to walking
             charStates.SetState(stateWalking);
@@ -45,6 +50,9 @@ public class Movement : MonoBehaviour
         //if movement button released
         if (context.canceled)
         {
+            //set input direction to 0
+            inputDirection = Vector2.zero;
+
             //set state to idle
             charStates.SetState(stateIdle);
         }
@@ -56,9 +64,16 @@ public class Movement : MonoBehaviour
 
     private void Start()
     {
+        //Set imports
+        followTrasnform = GameObject.Find("Follow Target").transform;
+        meshRootTransform = transform.Find("Rich Body").transform;
+
         //Set components
         rb = GetComponent<Rigidbody>();
         charStates = GetComponent<CharacterStates>();
+
+        //lock cursor (POR NO SCRIPT D GAMEPLAY OU CAMERA DPS)
+        Cursor.lockState = CursorLockMode.Locked;
     }
 
     private void FixedUpdate()
@@ -66,11 +81,17 @@ public class Movement : MonoBehaviour
         //move if state is walking
         if (charStates.state == stateWalking)
         {
-            //accelerate towards direction
-            Vector2 fDirection = direction * accEscalated;
-            rb.AddForce(fDirection.x, 0, fDirection.y);
+            //update direction
+            direction = inputDirection.x * followTrasnform.right + inputDirection.y * followTrasnform.forward;
+            direction = direction.normalized;
+            direction.y = 0;
 
-            print(direction);
+            //look at direction
+            meshRootTransform.rotation = Quaternion.LookRotation(direction);
+
+            //accelerate towards direction
+            Vector3 force = direction * acceleration;
+            rb.AddForce(force.x, 0, force.z);
         }
     }
 

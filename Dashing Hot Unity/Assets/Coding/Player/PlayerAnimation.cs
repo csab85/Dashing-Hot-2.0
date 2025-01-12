@@ -22,7 +22,7 @@ public class PlayerAnimation : MonoBehaviour
     {
         //get components
         animator = GetComponent<Animator>();
-        charStates = GetComponent<CharacterStates>();
+        charStates = transform.parent.GetComponent<CharacterStates>();
     }
 
     private void Update()
