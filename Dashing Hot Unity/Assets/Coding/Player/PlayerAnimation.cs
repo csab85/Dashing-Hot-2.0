@@ -8,11 +8,11 @@ public class PlayerAnimation : MonoBehaviour
 
     //COMPONENTS
     Animator animator;
-    CharacterStates charStates;
+    PlayerStats playerStats;
 
     //STATES
-    CharacterStates.States stateWalking = CharacterStates.States.Walking;
-    CharacterStates.States stateIdle = CharacterStates.States.Idle;
+    PlayerStats.States stateWalking = PlayerStats.States.Walking;
+    PlayerStats.States stateIdle = PlayerStats.States.Idle;
 
     #endregion
 
@@ -22,19 +22,19 @@ public class PlayerAnimation : MonoBehaviour
     {
         //get components
         animator = GetComponent<Animator>();
-        charStates = transform.parent.GetComponent<CharacterStates>();
+        playerStats = transform.parent.GetComponent<PlayerStats>();
     }
 
     private void Update()
     {
         //if on walking state
-        if (charStates.state == stateWalking)
+        if (playerStats.state == stateWalking)
         {
             animator.Play("Walking");
         }
 
         //if on idle state
-        if (charStates.state == stateIdle)
+        if (playerStats.state == stateIdle)
         {
             animator.Play("Idle");
         }

@@ -12,7 +12,7 @@ public class PlayerCamera : MonoBehaviour
 
     //Components
     Transform followTransform;
-    CharacterStates playerStates;
+    PlayerStats playerStats;
     CinemachineFreeLook normalCamera;
     CinemachineVirtualCamera combatCamera;
     Image reticle;
@@ -41,7 +41,7 @@ public class PlayerCamera : MonoBehaviour
     public void ToggleCameraMode(InputAction.CallbackContext context)
     {
         //if on combat mode
-        if (playerStates.combatMode)
+        if (playerStats.combatMode)
         {
             //activate normal camera
             normalCamera.Priority = 1;
@@ -51,7 +51,7 @@ public class PlayerCamera : MonoBehaviour
             reticle.enabled = false;
 
             //update mode
-            playerStates.combatMode = false;
+            playerStats.combatMode = false;
         }
 
         //if on normal mode
@@ -65,7 +65,7 @@ public class PlayerCamera : MonoBehaviour
             reticle.enabled = true;
 
             //update mode
-            playerStates.combatMode = true;
+            playerStats.combatMode = true;
         }
     }
 
@@ -77,7 +77,7 @@ public class PlayerCamera : MonoBehaviour
     {
         //set components
         followTransform = GameObject.Find("Follow Target").transform;
-        playerStates = GameObject.Find("Player").GetComponent<CharacterStates>();
+        playerStats = GameObject.Find("Player").GetComponent<PlayerStats>();
         normalCamera = GameObject.Find("Normal Camera").GetComponent<CinemachineFreeLook>();
         combatCamera = GameObject.Find("Combat Camera").GetComponent<CinemachineVirtualCamera>();
         reticle = GameObject.Find("Reticle").GetComponent<Image>();
@@ -92,7 +92,7 @@ public class PlayerCamera : MonoBehaviour
 
         //yaw for player pitch on camera+
 
-        if (playerStates.combatMode)
+        if (playerStats.combatMode)
         {        
             //update mouse delta
             mouseDeltaX = Input.GetAxis("Mouse X") * xSensibility * 5;

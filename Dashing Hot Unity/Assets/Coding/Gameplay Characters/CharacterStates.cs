@@ -3,27 +3,20 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class CharacterStates : MonoBehaviour
+public abstract class CharacterStats : MonoBehaviour
 {
-    #region STATES
+    #region VARS
 
-    public enum States
-    {
-        Idle,
-        Walking
-    }
+    public float health;
+    public float maxHealth;
 
-    public States state;
-    public bool combatMode;
+    public bool dashing;
 
     #endregion
 
     #region METHODS
 
-    public void SetState(States newState)
-    {
-        state = newState;
-    }
+    public abstract void SetState<TState>(TState targetState);
 
     #endregion
 }

@@ -1964,8 +1964,8 @@ GameObject:
   - component: {fileID: 2021769933106895865}
   - component: {fileID: 2021769933106895872}
   - component: {fileID: 2021769933106895871}
+  - component: {fileID: 2021769933106895873}
   - component: {fileID: 2021769933106895869}
-  - component: {fileID: 2021769933106895867}
   - component: {fileID: 2021769933106895866}
   m_Layer: 0
   m_Name: Player
@@ -2054,20 +2054,6 @@ MonoBehaviour:
   m_DefaultActionMap: Player Actions
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 330585545}
---- !u!114 &2021769933106895867
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1676770240095486275}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d8af7a3eb05beb046b02a2c273e82df7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  state: 0
-  combatMode: 0
 --- !u!114 &2021769933106895869
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2133,6 +2119,23 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 80
   m_CollisionDetection: 0
+--- !u!114 &2021769933106895873
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1676770240095486275}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 45d1c2cf8af8b9246934d286f1c38966, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  health: 0
+  maxHealth: 0
+  dashing: 0
+  state: 0
+  combatMode: 0
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

@@ -12,7 +12,7 @@ public class Movement : MonoBehaviour
 
     //self components
     Rigidbody rb;
-    CharacterStates playerStates;
+    PlayerStats playerStats;
 
     //import components
     Transform mainCameraTransform;
@@ -30,8 +30,8 @@ public class Movement : MonoBehaviour
     float accEscalated;
 
     //STATES
-    CharacterStates.States stateWalking = CharacterStates.States.Walking;
-    CharacterStates.States stateIdle = CharacterStates.States.Idle;
+    PlayerStats.States stateWalking = PlayerStats.States.Walking;
+    PlayerStats.States stateIdle = PlayerStats.States.Idle;
 
     #endregion
 
@@ -50,7 +50,7 @@ public class Movement : MonoBehaviour
             inputDirection = context.ReadValue<Vector2>();
 
             //set state to walking
-            playerStates.SetState(stateWalking);
+            playerStats.SetState(stateWalking);
         }
 
         //if movement button released
@@ -60,7 +60,7 @@ public class Movement : MonoBehaviour
             inputDirection = Vector2.zero;
 
             //set state to idle
-            playerStates.SetState(stateIdle);
+            playerStats.SetState(stateIdle);
         }
     }
 
@@ -72,7 +72,7 @@ public class Movement : MonoBehaviour
     {
         //Set components
         rb = GetComponent<Rigidbody>();
-        playerStates = GetComponent<CharacterStates>();
+        playerStats = GetComponent<PlayerStats>();
         mainCameraTransform = GameObject.Find("Main Camera").transform;
         followTrasnform = GameObject.Find("Follow Target").transform;
         meshRootTransform = transform.Find("Rich Body").transform;
@@ -81,7 +81,7 @@ public class Movement : MonoBehaviour
     private void FixedUpdate()
     {
         //move if state is walking
-        if (playerStates.state == stateWalking)
+        if (playerStats.state == stateWalking)
         {
             //update direction
             direction = inputDirection.x * mainCameraTransform.right + inputDirection.y * mainCameraTransform.forward;
@@ -89,7 +89,7 @@ public class Movement : MonoBehaviour
             direction.y = 0;
 
             //look at direction if on normal mode
-            if (!playerStates.combatMode)
+            if (!playerStats.combatMode)
             {
                 meshRootTransform.rotation = Quaternion.LookRotation(direction);
             }
@@ -100,7 +100,7 @@ public class Movement : MonoBehaviour
         }
 
         //look forward if on combat mode
-        if (playerStates.combatMode)
+        if (playerStats.combatMode)
         {
             Vector3 forwardDirection = new Vector3(followTrasnform.forward.x, 0, followTrasnform.forward.z);
             meshRootTransform.rotation = Quaternion.LookRotation(forwardDirection);

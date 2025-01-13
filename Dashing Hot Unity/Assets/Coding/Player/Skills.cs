@@ -13,8 +13,6 @@ public class Skills : MonoBehaviour
     //imports
 
 
-    bool combatMode = false;
-
     #endregion
 
 
