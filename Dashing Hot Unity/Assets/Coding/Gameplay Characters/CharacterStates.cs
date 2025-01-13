@@ -14,6 +14,7 @@ public class CharacterStates : MonoBehaviour
     }
 
     public States state;
+    public bool combatMode;
 
     #endregion
 
