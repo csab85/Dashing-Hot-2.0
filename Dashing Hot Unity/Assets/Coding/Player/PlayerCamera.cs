@@ -93,7 +93,7 @@ public class PlayerCamera : MonoBehaviour
         //yaw for player pitch on camera+
 
         if (playerStats.combatMode)
-        {        
+        {
             //update mouse delta
             mouseDeltaX = Input.GetAxis("Mouse X") * xSensibility * 5;
             mouseDeltaY = Input.GetAxis("Mouse Y") * ySensibility * 5;
@@ -112,7 +112,6 @@ public class PlayerCamera : MonoBehaviour
                 targetRotation = Quaternion.Euler(pitch, yaw, 0);
             }
 
-            //lerp towards position
             followTransform.rotation = Quaternion.Slerp(followTransform.rotation, targetRotation, Time.deltaTime * 5);
         }
 

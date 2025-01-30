@@ -26,17 +26,27 @@ public class PlayerAnimation : MonoBehaviour
     }
 
     private void Update()
-    {
-        //if on walking state
-        if (playerStats.state == stateWalking)
+    {   
+        //if not dashing
+        if (!playerStats.dashing)
         {
-            animator.Play("Walking");
+            //if on walking state
+            if (playerStats.state == stateWalking)
+            {
+                animator.Play("Walking");
+            }
+
+            //if on idle state
+            if (playerStats.state == stateIdle)
+            {
+                animator.Play("Idle");
+            }
         }
 
-        //if on idle state
-        if (playerStats.state == stateIdle)
+        //if dashing
+        else
         {
-            animator.Play("Idle");
+            animator.Play("Dashing");
         }
     }
 

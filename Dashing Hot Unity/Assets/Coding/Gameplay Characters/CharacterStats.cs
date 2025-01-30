@@ -11,6 +11,8 @@ public abstract class CharacterStats : MonoBehaviour
     public float maxHealth;
 
     public bool dashing;
+    public bool yeeted;
+    public bool stunned;
 
     #endregion
 

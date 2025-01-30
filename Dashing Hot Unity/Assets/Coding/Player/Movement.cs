@@ -17,7 +17,7 @@ public class Movement : MonoBehaviour
     //import components
     Transform mainCameraTransform;
     Transform followTrasnform;
-    Transform meshRootTransform;
+    Transform richBodyTransform;
 
     //Player stats
     [SerializeField] float acceleration;
@@ -43,24 +43,28 @@ public class Movement : MonoBehaviour
     /// <param name="context"></param>
     public void Walk(InputAction.CallbackContext context)
     {
-        //if movemenbt button started
-        if (context.started | context.performed)
+        //if not using skill and not stunned
+        if (!playerStats.usingSkill && !playerStats.stunned)
         {
-            //get input direction
-            inputDirection = context.ReadValue<Vector2>();
+            //if movemenbt button started
+            if (context.started | context.performed)
+            {
+                //get input direction
+                inputDirection = context.ReadValue<Vector2>();
 
-            //set state to walking
-            playerStats.SetState(stateWalking);
-        }
+                //set state to walking
+                playerStats.SetState(stateWalking);
+            }
 
-        //if movement button released
-        if (context.canceled)
-        {
-            //set input direction to 0
-            inputDirection = Vector2.zero;
+            //if movement button released
+            if (context.canceled)
+            {
+                //set input direction to 0
+                inputDirection = Vector2.zero;
 
-            //set state to idle
-            playerStats.SetState(stateIdle);
+                //set state to idle
+                playerStats.SetState(stateIdle);
+            }
         }
     }
 
@@ -75,7 +79,7 @@ public class Movement : MonoBehaviour
         playerStats = GetComponent<PlayerStats>();
         mainCameraTransform = GameObject.Find("Main Camera").transform;
         followTrasnform = GameObject.Find("Follow Target").transform;
-        meshRootTransform = transform.Find("Rich Body").transform;
+        richBodyTransform = transform.Find("Rich Body").transform;
     }
 
     private void FixedUpdate()
@@ -91,7 +95,7 @@ public class Movement : MonoBehaviour
             //look at direction if on normal mode
             if (!playerStats.combatMode)
             {
-                meshRootTransform.rotation = Quaternion.LookRotation(direction);
+                richBodyTransform.rotation = Quaternion.LookRotation(direction);
             }
 
             //accelerate towards direction
@@ -99,11 +103,15 @@ public class Movement : MonoBehaviour
             rb.AddForce(force.x, 0, force.z);
         }
 
-        //look forward if on combat mode
+        //if on combat mode
         if (playerStats.combatMode)
         {
-            Vector3 forwardDirection = new Vector3(followTrasnform.forward.x, 0, followTrasnform.forward.z);
-            meshRootTransform.rotation = Quaternion.LookRotation(forwardDirection);
+            //if not using skill or stunned
+            if (!playerStats.usingSkill && !playerStats.stunned)
+            {
+                Vector3 forwardDirection = new Vector3(followTrasnform.forward.x, 0, followTrasnform.forward.z);
+                richBodyTransform.rotation = Quaternion.LookRotation(forwardDirection);
+            }
         }
     }
 
