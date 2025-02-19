@@ -1,5 +1,3 @@
-using Cinemachine;
-using Cinemachine.Editor;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -15,11 +13,7 @@ public class Skills : MonoBehaviour
     PlayerStats playerStats;
     Transform richBodyTransform;
 
-    //stats
-    [SerializeField] float dashDuration;
-
     #endregion
-
 
     #region METHODS
 
@@ -38,28 +32,32 @@ public class Skills : MonoBehaviour
                 //update dash direction based on mesh
                 playerStats.dashDirection = richBodyTransform.forward;
 
-                //start coroutine
-                StartCoroutine("DashCoroutine");
+                //set dashing and using skill to true
+                StartCoroutine(playerStats.StartDashing());
+                playerStats.usingSkill = true;
             }
         }
     }
 
-    /// <summary>
-    /// Sets player dashing and using skill to true for dashDuration seconds
-    /// </summary>
-    /// <returns></returns>
-    IEnumerator DashCoroutine()
+    void ResetUsingSkill()
     {
-        //set dashing and using skill to true
-        playerStats.dashing = true;
-        playerStats.usingSkill = true;
-
-        //wait for dash duration
-        yield return new WaitForSeconds(dashDuration);
-
-        //set dashing and using skill to false 
-        playerStats.dashing = false;
         playerStats.usingSkill = false;
+    }
+
+    #endregion
+
+    #region EVENTS
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (playerStats.dashing && !playerStats.yeeted)
+        {
+            if (collision.gameObject.GetComponent<CharacterStats>() is CharacterStats targetStats)
+            {
+                targetStats.yeeted = true;
+                targetStats.dashDirection = playerStats.dashDirection;
+            }
+        }
     }
 
     #endregion
@@ -71,6 +69,9 @@ public class Skills : MonoBehaviour
         //set imports
         playerStats = GetComponent<PlayerStats>();
         richBodyTransform = transform.Find("Rich Body");
+
+        //add event listeners
+        CharacterStats.OnDashStop += ResetUsingSkill;
     }
 
     #endregion

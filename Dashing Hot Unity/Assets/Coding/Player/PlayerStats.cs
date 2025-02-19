@@ -8,12 +8,7 @@ public class PlayerStats : CharacterStats
     #region VARS
 
     //IMPORTS
-    Rigidbody rb;
     Transform richBodyTransform;
-    float rbDrag;
-
-    //STATS
-    [SerializeField] float speed;
 
     //STATES
     public enum States
@@ -27,26 +22,8 @@ public class PlayerStats : CharacterStats
     public bool combatMode;
     public bool usingSkill;
 
-    //OTHER
-    [HideInInspector] public Vector3 dashDirection;
-
     #endregion
 
-    #region EVENTS
-
-    private void OnCollisionEnter(Collision collision)
-    {
-        ////colliding with enemies (change from character stats to enemy stats)
-        //if (collision.gameObject.GetComponent<CharacterStats>() is CharacterStats characterStats)
-        //{
-        //    if (dashing)
-        //    {
-        //        dashing = false;
-        //    }
-        //}
-    }
-
-    #endregion
 
     #region METHODS
 
@@ -59,35 +36,15 @@ public class PlayerStats : CharacterStats
         }
     }
 
-    IEnumerator StopDashing()
-    {
-        yield return new WaitForEndOfFrame();
-        dashing = false;
-    }
-
     #endregion
+
 
     #region RUNNING
 
     private void Start()
     {
-        rb = GetComponent<Rigidbody>();
+        CharacterStart();
         richBodyTransform = transform.Find("Rich Body");
-        rbDrag = rb.drag;
-    }
-
-    private void Update()
-    {
-        if (dashing)
-        {
-            rb.drag = 0;
-            rb.velocity = dashDirection * speed;
-        }
-
-        else
-        {
-            rb.drag = rbDrag;
-        }
     }
 
     #endregion
