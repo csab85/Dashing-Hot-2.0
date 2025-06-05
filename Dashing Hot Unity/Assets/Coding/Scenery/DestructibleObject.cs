@@ -4,9 +4,11 @@ using UnityEngine;
 
 public class DestructibleObject : MonoBehaviour
 {
-    #region IMPORTS
+    #region VARS
 
     BoxCollider boxCollider;
+
+    [SerializeField] float punchForce;
 
     #endregion
 
@@ -31,7 +33,9 @@ public class DestructibleObject : MonoBehaviour
                 //add explosion force to each piece
                 foreach(Transform piece in brokeVersion.transform)
                 {
-                    piece.gameObject.GetComponent<Rigidbody>().AddExplosionForce(-2000, contactPoint, 10);
+                    Vector3 direction = (piece.position - contactPoint).normalized;
+
+                    piece.gameObject.GetComponent<Rigidbody>().AddForce(-(direction * punchForce), ForceMode.Impulse);
                 }
 
                 //destroy self
