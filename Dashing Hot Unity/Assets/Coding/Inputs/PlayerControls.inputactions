@@ -1,5 +1,5 @@
 {
-    "name": "PlayerControl",
+    "name": "PlayerControls",
     "maps": [
         {
             "name": "Player Actions",
@@ -18,7 +18,7 @@
                     "name": "Toggle Camera",
                     "type": "Button",
                     "id": "ae03f846-c613-4df9-8b16-6f8892a2a1ac",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -27,7 +27,7 @@
                     "name": "Dash",
                     "type": "Button",
                     "id": "bd8e051e-ad51-4963-889f-ba17e9712fe5",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false

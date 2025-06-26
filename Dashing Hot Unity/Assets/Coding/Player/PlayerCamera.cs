@@ -1,6 +1,6 @@
-using Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Rendering.Universal;
@@ -13,8 +13,8 @@ public class PlayerCamera : MonoBehaviour
     //Components
     Transform followTransform;
     PlayerStats playerStats;
-    CinemachineFreeLook normalCamera;
-    CinemachineVirtualCamera combatCamera;
+    CinemachineCamera normalCamera;
+    CinemachineCamera combatCamera;
     Image reticle;
 
     //stats
@@ -78,8 +78,8 @@ public class PlayerCamera : MonoBehaviour
         //set components
         followTransform = GameObject.Find("Follow Target").transform;
         playerStats = GameObject.Find("Player").GetComponent<PlayerStats>();
-        normalCamera = GameObject.Find("Normal Camera").GetComponent<CinemachineFreeLook>();
-        combatCamera = GameObject.Find("Combat Camera").GetComponent<CinemachineVirtualCamera>();
+        normalCamera = GameObject.Find("Normal Camera").GetComponent<CinemachineCamera>();
+        combatCamera = GameObject.Find("Combat Camera").GetComponent<CinemachineCamera>();
         reticle = GameObject.Find("Reticle").GetComponent<Image>();
 
         //Lock mouse to center and hide it

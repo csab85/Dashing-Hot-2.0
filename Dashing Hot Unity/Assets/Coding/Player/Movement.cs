@@ -1,4 +1,3 @@
-using Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor.Experimental.GraphView;
@@ -23,11 +22,16 @@ public class Movement : MonoBehaviour
     [SerializeField] float acceleration;
     [SerializeField] float deceleration;
     [SerializeField] float maxVelocity;
+    [SerializeField] float fallAcceleration;
+    [SerializeField] float groundCheckDistance;
 
     //VARS
     Vector2 inputDirection;
     Vector3 direction;
     float accEscalated;
+    [SerializeField] private bool _grounded;
+
+    [SerializeField] private LayerMask _groundLayer;
 
     //STATES
     PlayerStats.States stateWalking = PlayerStats.States.Walking;
@@ -113,6 +117,16 @@ public class Movement : MonoBehaviour
                 richBodyTransform.rotation = Quaternion.LookRotation(forwardDirection);
             }
         }
+
+        //check if on floor
+        _grounded = Physics.Raycast(transform.position + transform.up, -transform.up, groundCheckDistance, _groundLayer);
+
+        //apply speed if not on floor
+        if (!_grounded)
+        {
+            rb.AddForce(-transform.up * fallAcceleration, ForceMode.Acceleration);
+        }
+        print(_grounded);
     }
 
     #endregion

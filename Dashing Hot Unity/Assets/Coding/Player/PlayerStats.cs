@@ -73,20 +73,20 @@ public class PlayerStats : CharacterStats
     {
         rb = GetComponent<Rigidbody>();
         richBodyTransform = transform.Find("Rich Body");
-        rbDrag = rb.drag;
+        rbDrag = rb.linearDamping;
     }
 
     private void Update()
     {
         if (dashing)
         {
-            rb.drag = 0;
-            rb.velocity = dashDirection * speed;
+            rb.linearDamping = 0;
+            rb.linearVelocity = dashDirection * speed;
         }
 
         else
         {
-            rb.drag = rbDrag;
+            rb.linearDamping = rbDrag;
         }
     }
 

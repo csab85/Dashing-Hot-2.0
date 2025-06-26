@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Events;
 
 public abstract class CharacterStats : MonoBehaviour
 {
@@ -13,6 +13,15 @@ public abstract class CharacterStats : MonoBehaviour
     public bool dashing;
     public bool yeeted;
     public bool stunned;
+
+    #endregion
+
+    #region EVENTS
+
+    [HideInInspector] public UnityEvent OnDash;
+    [HideInInspector]
+    
+
 
     #endregion
 
