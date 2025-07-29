@@ -18,8 +18,8 @@ public class PlayerCamera : MonoBehaviour
     Image reticle;
 
     //stats
-    [SerializeField] [Range(0, 1)] float xSensibility;
-    [SerializeField][Range(0, 1)] float ySensibility;
+    [SerializeField] [Range(0, 100)] float xSensibility;
+    [SerializeField][Range(0, 100)] float ySensibility;
     [SerializeField][Range(-80, 80)] float minYAngle;
     [SerializeField][Range(-80, 80)] float maxYAngle;
     
@@ -28,11 +28,17 @@ public class PlayerCamera : MonoBehaviour
     float mouseDeltaY = 0;
     float pitch;
     float yaw;
+    Vector3 cameraRotation;
     Quaternion targetRotation;
 
     #endregion
 
     #region METHODS
+
+    IEnumerator ActivateCOmbatCamera()
+    {
+        yield return new WaitForEndOfFrame();
+    }
 
     /// <summary>
     /// Toggles active camera (combat or normal)
@@ -40,32 +46,48 @@ public class PlayerCamera : MonoBehaviour
     /// <param name="context"></param>
     public void ToggleCameraMode(InputAction.CallbackContext context)
     {
-        //if on combat mode
-        if (playerStats.combatMode)
+        if (context.performed)
         {
-            //activate normal camera
-            normalCamera.Priority = 1;
-            combatCamera.Priority = 0;
+            //if on combat mode
+            if (playerStats.combatMode)
+            {
+                //activate normal camera
+                normalCamera.Priority = 1;
+                combatCamera.Priority = 0;
 
-            //hide reticle
-            reticle.enabled = false;
+                //hide reticle
+                reticle.enabled = false;
 
-            //update mode
-            playerStats.combatMode = false;
-        }
+                //update mode
+                playerStats.combatMode = false;
+            }
 
-        //if on normal mode
-        else
-        {
-            //activate combat camera
-            normalCamera.Priority = 0;
-            combatCamera.Priority = 1;
+            //if on normal mode
+            else
+            {
+                //update vars based on last camera position
+                cameraRotation = Camera.main.transform.rotation.eulerAngles;
 
-            //show reticle
-            reticle.enabled = true;
+                yaw = cameraRotation.y;
+                pitch = cameraRotation.x;
+                if (pitch > 180) pitch -= 360; //fix pitch wrap around
+                pitch = Mathf.Clamp(pitch, -maxYAngle, -minYAngle); //clamp pitch
 
-            //update mode
-            playerStats.combatMode = true;
+                targetRotation = Quaternion.Euler(pitch, yaw, 0);
+
+                //update follow transform so it inherits last cam posit
+                followTransform.rotation = targetRotation;
+
+                //activate combat camera
+                normalCamera.Priority = 0;
+                combatCamera.Priority = 1;
+
+                //show reticle
+                reticle.enabled = true;
+
+                //update mode
+                playerStats.combatMode = true;
+            }
         }
     }
 
@@ -88,15 +110,15 @@ public class PlayerCamera : MonoBehaviour
 
     private void Update()
     {
-        #region Move camera with cursor (if on combat mode)
+        #region Move camera (with follow transform) with cursor
 
         //yaw for player pitch on camera+
 
         if (playerStats.combatMode)
         {
             //update mouse delta
-            mouseDeltaX = Input.GetAxis("Mouse X") * xSensibility * 5;
-            mouseDeltaY = Input.GetAxis("Mouse Y") * ySensibility * 5;
+            mouseDeltaX = Input.GetAxis("Mouse X") * xSensibility * Time.deltaTime;
+            mouseDeltaY = Input.GetAxis("Mouse Y") * ySensibility * Time.deltaTime;
 
             //if mouse moving
             if (mouseDeltaX != 0 | mouseDeltaY != 0)

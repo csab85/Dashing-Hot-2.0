@@ -20,10 +20,9 @@ public class Movement : MonoBehaviour
 
     //Player stats
     [SerializeField] float acceleration;
-    [SerializeField] float deceleration;
-    [SerializeField] float maxVelocity;
     [SerializeField] float fallAcceleration;
     [SerializeField] float groundCheckDistance;
+    [SerializeField] float groundDamp;
 
     //VARS
     Vector2 inputDirection;
@@ -121,12 +120,14 @@ public class Movement : MonoBehaviour
         //check if on floor
         _grounded = Physics.Raycast(transform.position + transform.up, -transform.up, groundCheckDistance, _groundLayer);
 
+        //activate damp (friction) if on ground
+        rb.linearDamping = _grounded ? groundDamp : 0;
+
         //apply speed if not on floor
         if (!_grounded)
         {
             rb.AddForce(-transform.up * fallAcceleration, ForceMode.Acceleration);
         }
-        print(_grounded);
     }
 
     #endregion

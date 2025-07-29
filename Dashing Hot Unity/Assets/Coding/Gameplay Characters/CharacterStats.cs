@@ -14,6 +14,8 @@ public abstract class CharacterStats : MonoBehaviour
     public bool yeeted;
     public bool stunned;
 
+    Rigidbody rb;
+
     #endregion
 
     #region EVENTS
@@ -28,6 +30,20 @@ public abstract class CharacterStats : MonoBehaviour
     #region METHODS
 
     public abstract void SetState<TState>(TState targetState);
+
+    public void PushSelf(Vector3 direction, float velocity, float duration)
+    {
+        
+    }
+
+    #endregion
+
+    #region RUNNING
+
+    private void Start()
+    {
+        rb = GetComponent<Rigidbody>();
+    }
 
     #endregion
 }
