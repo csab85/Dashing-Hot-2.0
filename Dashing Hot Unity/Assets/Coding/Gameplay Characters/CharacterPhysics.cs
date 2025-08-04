@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Apple;
 using UnityEngine.Rendering;
@@ -9,8 +10,10 @@ public class CharacterPhysics : MonoBehaviour
 
     //dependencies
     Rigidbody _rigidbody;
+    Rigidbody[] _ragdollRigidbodies;
     CharacterStats _characterStats;
     StateMachine _stateMachine;
+    [SerializeField] Transform _HipBoneTransform;
 
     //PLAYER dependencies
     PlayerStats _playerStats;
@@ -34,8 +37,14 @@ public class CharacterPhysics : MonoBehaviour
 
     #region METHODS
 
+    #region Push
     IEnumerator PushSelfCoroutine(Vector3 direction, float force, float duration, bool useRagdoll, bool useResistance)
     {
+        if (useRagdoll)
+        {
+            _characterStats.CallOnPropelled();
+        }
+
         //start breaking stuff it touches
         _characterStats.IsBreakingObjects = true;
 
@@ -64,9 +73,16 @@ public class CharacterPhysics : MonoBehaviour
         {
             finalDuration = duration;
         }
-            yield return new WaitForSeconds(finalDuration);
 
-        StopPushing();
+        yield return new WaitForSeconds(finalDuration);
+
+        //check if needs to enable ragdoll
+        if (useRagdoll)
+        {
+            EnableRagdoll();
+        }
+
+        StopPushing(false, useRagdoll);
 
         //ADD IMPULSE AND RAGDOLL HERE
     }
@@ -80,14 +96,21 @@ public class CharacterPhysics : MonoBehaviour
         }
     }
 
-    void StopPushing(bool hitPunch = false)
+    void StopPushing(bool hitPunch = false, bool resetRagdoll = true)
     {
+        if (resetRagdoll)
+        {
+            _HipBoneTransform.gameObject.GetComponent<Rigidbody>().AddForce((_pushDirection + (transform.up/5)) * _pushForce * 10, ForceMode.Impulse);
+            StartCoroutine(WaitAndResetRagdoll());
+        }
+
         StopCoroutine(_pushSelfCoroutine);
         _characterStats.IsPropelled = false;
         _characterStats.IsDashing = false;
+        _characterStats.IsBreakingObjects = false;
         StartCoroutine(PushInvencibilityCoroutine());
 
-        //call animation
+        //call result
         if (hitPunch && _playerStats != null)
         {
             _playerStats.CallOnHitPunch();
@@ -99,6 +122,15 @@ public class CharacterPhysics : MonoBehaviour
         }
     }
 
+    IEnumerator WaitAndResetRagdoll()
+    {
+        yield return new WaitForSeconds(_characterStats.FallDuration);
+
+        transform.position = _HipBoneTransform.position;
+        print("bo" + gameObject);
+        DisableRagdoll();
+    }
+
     IEnumerator PushInvencibilityCoroutine()
     {
         _isUnpushable = true;
@@ -107,6 +139,29 @@ public class CharacterPhysics : MonoBehaviour
 
         _isUnpushable = false;
     }
+    #endregion
+
+    #region Ragdoll
+
+    void EnableRagdoll()
+    {
+        foreach (Rigidbody rigidbody in _ragdollRigidbodies)
+        {
+            rigidbody.isKinematic = false;
+            _characterStats.CallOnEnableRagdoll();
+        }
+    }
+
+    void DisableRagdoll()
+    {
+        foreach (Rigidbody rigidbody in _ragdollRigidbodies)
+        {
+            rigidbody.isKinematic = true;
+            _characterStats.CallOnDisableRagdoll();
+        }
+    }
+
+    #endregion
 
     #endregion
 
@@ -125,7 +180,7 @@ public class CharacterPhysics : MonoBehaviour
                 //stop if it's dashing (not damage propelled) and not unstoppable
                 if (_characterStats.IsDashing && !_characterStats.IsUnstoppable)
                 {
-                    StopPushing(true);
+                    StopPushing(true, false);
                 }
             }
         }
@@ -139,6 +194,7 @@ public class CharacterPhysics : MonoBehaviour
     private void Start()
     {
         _rigidbody = GetComponent<Rigidbody>();
+        _ragdollRigidbodies = GetComponentsInChildren<Rigidbody>().Where<Rigidbody>(rb => rb.gameObject != this.gameObject).ToArray(); //ignore rb if it's in a game object equal to this one
         _characterStats = GetComponent<CharacterStats>();
         _stateMachine = GetComponent<StateMachine>();
 

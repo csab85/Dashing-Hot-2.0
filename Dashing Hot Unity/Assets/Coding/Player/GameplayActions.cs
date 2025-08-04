@@ -43,7 +43,7 @@ public class GameplayActions : MonoBehaviour
 
     public void Walk(InputAction.CallbackContext context)
     {
-        if (context.started)
+        if (context.started || context.performed)
         {
             //try changing state
             _stateMachine.ChangeState(_walkingState);
@@ -58,7 +58,6 @@ public class GameplayActions : MonoBehaviour
         {
             //try changing state
             _stateMachine.ChangeState(_idleState);
-            print("change idle");
         }
     }
 

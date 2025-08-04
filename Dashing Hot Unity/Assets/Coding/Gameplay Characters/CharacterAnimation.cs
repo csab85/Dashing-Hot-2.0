@@ -22,11 +22,28 @@ public abstract class CharacterAnimation : MonoBehaviour
     void SetIdleAnimation()
     {
         _animator.SetInteger("Movement", 0);
+        _animator.SetBool("Propelled", false);
     }
 
     void SetWalkingAnimation()
     {
         _animator.SetInteger("Movement", 1);
+    }
+
+    void SetPropelledAnimation()
+    {
+        _animator.Play("Propelled");
+        _animator.SetBool("Propelled", true);
+    }
+
+    void EnableAnimator()
+    {
+        _animator.enabled = true;
+    }
+
+    void DisableAnimator()
+    {
+        _animator.enabled = false;
     }
 
     protected void CharacterAnimationStart()
@@ -39,6 +56,9 @@ public abstract class CharacterAnimation : MonoBehaviour
         //sign in to events
         _characterStats.OnIdle += SetIdleAnimation;
         _characterStats.OnWalk += SetWalkingAnimation;
+        _characterStats.OnPropelled += SetPropelledAnimation;
+        _characterStats.OnEnableRagdoll += DisableAnimator;
+        _characterStats.OnDisableRagdoll += EnableAnimator;
     }
 
     #endregion

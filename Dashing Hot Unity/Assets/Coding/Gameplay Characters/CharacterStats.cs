@@ -28,6 +28,7 @@ public abstract class CharacterStats : MonoBehaviour
     public float DashDuration;
     public float Damage;
     public float Resistance;
+    public float FallDuration;
     [HideInInspector] public float ResistanceCoefficient = 5;
 
     // State flags
@@ -44,6 +45,8 @@ public abstract class CharacterStats : MonoBehaviour
     public event Action OnIdle;
     public event Action OnWalk;
     public event Action OnPropelled; 
+    public event Action OnEnableRagdoll;
+    public event Action OnDisableRagdoll;
 
     #endregion
 
@@ -62,6 +65,16 @@ public abstract class CharacterStats : MonoBehaviour
     public void CallOnPropelled()
     {
         OnPropelled.Invoke();
+    }
+
+    public void CallOnEnableRagdoll()
+    {
+        OnEnableRagdoll.Invoke();
+    }
+
+    public void CallOnDisableRagdoll()
+    {
+        OnDisableRagdoll.Invoke();
     }
 
     protected void CharacterStart()

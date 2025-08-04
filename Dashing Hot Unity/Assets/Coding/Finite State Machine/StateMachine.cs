@@ -33,7 +33,7 @@ public class StateMachine : MonoBehaviour
 
         else
         {
-            ChangeState(new IdleState.Enemy());
+            ChangeState(new IdleState.Enemy(gameObject));
         }
     }
 
@@ -56,7 +56,7 @@ public class StateMachine : MonoBehaviour
 
         else
         {
-            CurrentState = new IdleState.Enemy();
+            CurrentState = new IdleState.Enemy(gameObject);
         }
     }
 

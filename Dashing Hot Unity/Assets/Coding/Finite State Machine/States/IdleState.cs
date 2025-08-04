@@ -60,8 +60,18 @@ public class IdleState
 
     public class Enemy : IState
     {
+        //dependencies
+        readonly EnemyStats _enemyStats;
+
+        //constructor
+        public Enemy(GameObject enemy)
+        {
+            _enemyStats = enemy.GetComponent<EnemyStats>();
+        }
+
         public bool Enter()
         {
+             _enemyStats.CallOnIdle();
             return true;
         }
 
