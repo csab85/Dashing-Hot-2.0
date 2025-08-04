@@ -1,134 +1,97 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEditor.Experimental.GraphView;
-using UnityEngine;
-using UnityEngine.InputSystem;
-using UnityEngine.Rendering;
+//using System.Collections;
+//using System.Collections.Generic;
+//using UnityEngine;
+//using UnityEngine.InputSystem;
 
-public class Movement : MonoBehaviour
-{
-    #region VARIABLES
+//public class Movement : MonoBehaviour
+//{
+//    #region VARIABLES
 
-    //self components
-    Rigidbody rb;
-    PlayerStats playerStats;
+//    // Components on self
+//    private Rigidbody _rb;
+//    private PlayerStats _playerStats;
 
-    //import components
-    Transform mainCameraTransform;
-    Transform followTrasnform;
-    Transform richBodyTransform;
+//    // External/transforms to track
+//    private Transform _mainCameraTransform;
+//    private Transform _followTransform;
+//    private Transform _richBodyTransform;
 
-    //Player stats
-    [SerializeField] float acceleration;
-    [SerializeField] float fallAcceleration;
-    [SerializeField] float groundCheckDistance;
-    [SerializeField] float groundDamp;
+//    // Player stats
+//    [SerializeField] private float _acceleration;
 
-    //VARS
-    Vector2 inputDirection;
-    Vector3 direction;
-    float accEscalated;
-    [SerializeField] private bool _grounded;
+//    // Input and movement data
+//    private Vector2 _inputDirection;
+//    private Vector3 _direction;
 
-    [SerializeField] private LayerMask _groundLayer;
+//    #endregion
 
-    //STATES
-    PlayerStats.States stateWalking = PlayerStats.States.Walking;
-    PlayerStats.States stateIdle = PlayerStats.States.Idle;
+//    #region METHODS
 
-    #endregion
+//    /// <summary>
+//    /// Handles movement input and updates player state accordingly.
+//    /// </summary>
+//    /// <param name="context">Input callback context</param>
+//    public void Walk(InputAction.CallbackContext context)
+//    {
+//        if (!_playerStats.usingSkill && !_playerStats.IsStunned)
+//        {
+//            if (context.started || context.performed)
+//            {
+//                _inputDirection = context.ReadValue<Vector2>();
+//                _playerStats.SetState(_stateWalking);
+//            }
+//            else if (context.canceled)
+//            {
+//                _inputDirection = Vector2.zero;
+//                _playerStats.SetState(_stateIdle);
+//            }
+//        }
+//    }
 
-    #region METHODS
+//    #endregion
 
-    /// <summary>
-    /// Sets state to walking and gets input direction
-    /// </summary>
-    /// <param name="context"></param>
-    public void Walk(InputAction.CallbackContext context)
-    {
-        //if not using skill and not stunned
-        if (!playerStats.usingSkill && !playerStats.stunned)
-        {
-            //if movemenbt button started
-            if (context.started | context.performed)
-            {
-                //get input direction
-                inputDirection = context.ReadValue<Vector2>();
+//    #region UNITY_LIFECYCLE
 
-                //set state to walking
-                playerStats.SetState(stateWalking);
-            }
+//    private void Start()
+//    {
+//        // Cache components
+//        _rb = GetComponent<Rigidbody>();
+//        _playerStats = GetComponent<PlayerStats>();
 
-            //if movement button released
-            if (context.canceled)
-            {
-                //set input direction to 0
-                inputDirection = Vector2.zero;
+//        _mainCameraTransform = GameObject.Find("Main Camera").transform;
+//        _followTransform = GameObject.Find("Follow Target").transform;
+//        _richBodyTransform = transform.Find("Rich Body").transform;
+//    }
 
-                //set state to idle
-                playerStats.SetState(stateIdle);
-            }
-        }
-    }
+//    private void FixedUpdate()
+//    {
+//        if (_playerStats.state == _stateWalking)
+//        {
+//            // Calculate direction relative to camera, ignore vertical
+//            _direction = _inputDirection.x * _mainCameraTransform.right + _inputDirection.y * _mainCameraTransform.forward;
+//            _direction.y = 0;
+//            _direction = _direction.normalized;
 
-    #endregion
+//            // Rotate character to face movement direction (if not in combat mode)
+//            if (!_playerStats.combatMode)
+//            {
+//                _richBodyTransform.rotation = Quaternion.LookRotation(_direction);
+//            }
 
-    #region RUNNING
+//            // Apply acceleration force on horizontal plane
+//            Vector3 force = _direction * _acceleration;
+//            _rb.AddForce(force.x, 0, force.z);
+//        }
 
-    private void Start()
-    {
-        //Set components
-        rb = GetComponent<Rigidbody>();
-        playerStats = GetComponent<PlayerStats>();
-        mainCameraTransform = GameObject.Find("Main Camera").transform;
-        followTrasnform = GameObject.Find("Follow Target").transform;
-        richBodyTransform = transform.Find("Rich Body").transform;
-    }
+//        if (_playerStats.combatMode)
+//        {
+//            if (!_playerStats.usingSkill && !_playerStats.IsStunned)
+//            {
+//                Vector3 forwardDirection = new Vector3(_followTransform.forward.x, 0, _followTransform.forward.z);
+//                _richBodyTransform.rotation = Quaternion.LookRotation(forwardDirection);
+//            }
+//        }
+//    }
 
-    private void FixedUpdate()
-    {
-        //move if state is walking
-        if (playerStats.state == stateWalking)
-        {
-            //update direction
-            direction = inputDirection.x * mainCameraTransform.right + inputDirection.y * mainCameraTransform.forward;
-            direction = direction.normalized;
-            direction.y = 0;
-
-            //look at direction if on normal mode
-            if (!playerStats.combatMode)
-            {
-                richBodyTransform.rotation = Quaternion.LookRotation(direction);
-            }
-
-            //accelerate towards direction
-            Vector3 force = direction * acceleration;
-            rb.AddForce(force.x, 0, force.z);
-        }
-
-        //if on combat mode
-        if (playerStats.combatMode)
-        {
-            //if not using skill or stunned
-            if (!playerStats.usingSkill && !playerStats.stunned)
-            {
-                Vector3 forwardDirection = new Vector3(followTrasnform.forward.x, 0, followTrasnform.forward.z);
-                richBodyTransform.rotation = Quaternion.LookRotation(forwardDirection);
-            }
-        }
-
-        //check if on floor
-        _grounded = Physics.Raycast(transform.position + transform.up, -transform.up, groundCheckDistance, _groundLayer);
-
-        //activate damp (friction) if on ground
-        rb.linearDamping = _grounded ? groundDamp : 0;
-
-        //apply speed if not on floor
-        if (!_grounded)
-        {
-            rb.AddForce(-transform.up * fallAcceleration, ForceMode.Acceleration);
-        }
-    }
-
-    #endregion
-}
+//    #endregion
+//}

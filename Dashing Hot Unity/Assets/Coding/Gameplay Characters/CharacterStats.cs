@@ -1,48 +1,73 @@
+using Mono.Cecil;
+using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
 public abstract class CharacterStats : MonoBehaviour
 {
-    #region VARS
+    #region Fields
 
-    public float health;
-    public float maxHealth;
+    // Components
+    [HideInInspector] public CharacterPhysics CharPhysics { get; private set; }
 
-    public bool dashing;
-    public bool yeeted;
-    public bool stunned;
+    // Stats
+    [Header("Base Health Stats")]
+    [SerializeField] private float _maxHealth;
+    private float _currentHealth;
 
-    Rigidbody rb;
+    [Header("Base Movement Stats")]
+    public float Acceleration;
+    public float GroundFriction;
+    public float FallAcceleration;
+
+    [Header("Battle Stats")]
+    public float PushForce;
+    public float PushDuration;
+    public float DashForce;
+    public float DashDuration;
+    public float Damage;
+    public float Resistance;
+    [HideInInspector] public float ResistanceCoefficient = 5;
+
+    // State flags
+    [HideInInspector] public bool IsBreakingObjects;
+    [HideInInspector] public bool IsDashing;
+    [HideInInspector] public bool IsPropelled;
+    [HideInInspector] public bool IsUnstoppable;
+    [HideInInspector] public bool IsStunned;
 
     #endregion
 
-    #region EVENTS
+    #region Unity Events
 
-    [HideInInspector] public UnityEvent OnDash;
-    [HideInInspector]
-    
-
+    public event Action OnIdle;
+    public event Action OnWalk;
+    public event Action OnPropelled; 
 
     #endregion
 
-    #region METHODS
+    #region Methods
 
-    public abstract void SetState<TState>(TState targetState);
-
-    public void PushSelf(Vector3 direction, float velocity, float duration)
+    public void CallOnIdle()
     {
-        
+        OnIdle.Invoke();
     }
 
-    #endregion
-
-    #region RUNNING
-
-    private void Start()
+    public void CallOnWalk()
     {
-        rb = GetComponent<Rigidbody>();
+        OnWalk.Invoke();
+    }
+
+    public void CallOnPropelled()
+    {
+        OnPropelled.Invoke();
+    }
+
+    protected void CharacterStart()
+    {
+        CharPhysics = GetComponent<CharacterPhysics>();
+        _currentHealth = _maxHealth;
     }
 
     #endregion

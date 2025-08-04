@@ -2,52 +2,47 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerAnimation : MonoBehaviour
+public class PlayerAnimation : CharacterAnimation
 {
     #region VARIABLES
 
     //COMPONENTS
-    Animator animator;
-    PlayerStats playerStats;
+    Animator _animator;
+    StateMachine _stateMachine;
+    PlayerStats _playerStats;
 
     //STATES
-    PlayerStats.States stateWalking = PlayerStats.States.Walking;
-    PlayerStats.States stateIdle = PlayerStats.States.Idle;
 
     #endregion
 
-    #region RUNNING
+    #region METHODS
+
+    void SetPunchAnimation()
+    {
+        _animator.Play("Punch");
+    }
+
+    void SetDashAnimation()
+    {
+        _animator.Play("Dash");
+    }
+
+    #endregion
+
+    #region UNITY LIFECYCLE
 
     private void Start()
     {
+        CharacterAnimationStart();
+
         //get components
-        animator = GetComponent<Animator>();
-        playerStats = transform.parent.GetComponent<PlayerStats>();
-    }
+        _animator = GetComponent<Animator>();
+        _stateMachine = transform.parent.GetComponent<StateMachine>();
+        _playerStats = transform.parent.GetComponent<PlayerStats>();
 
-    private void Update()
-    {   
-        //if not dashing
-        if (!playerStats.dashing)
-        {
-            //if on walking state
-            if (playerStats.state == stateWalking)
-            {
-                animator.Play("Walking");
-            }
-
-            //if on idle state
-            if (playerStats.state == stateIdle)
-            {
-                animator.Play("Idle");
-            }
-        }
-
-        //if dashing
-        else
-        {
-            animator.Play("Dashing");
-        }
+        //sign in to events
+        _playerStats.OnHitPunch += SetPunchAnimation;
+        _playerStats.OnDash += SetDashAnimation;
     }
 
     #endregion

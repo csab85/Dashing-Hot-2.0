@@ -49,7 +49,7 @@ public class PlayerCamera : MonoBehaviour
         if (context.performed)
         {
             //if on combat mode
-            if (playerStats.combatMode)
+            if (playerStats.isOnCombatMode)
             {
                 //activate normal camera
                 normalCamera.Priority = 1;
@@ -59,7 +59,7 @@ public class PlayerCamera : MonoBehaviour
                 reticle.enabled = false;
 
                 //update mode
-                playerStats.combatMode = false;
+                playerStats.isOnCombatMode = false;
             }
 
             //if on normal mode
@@ -86,7 +86,7 @@ public class PlayerCamera : MonoBehaviour
                 reticle.enabled = true;
 
                 //update mode
-                playerStats.combatMode = true;
+                playerStats.isOnCombatMode = true;
             }
         }
     }
@@ -98,7 +98,7 @@ public class PlayerCamera : MonoBehaviour
     private void Start()
     {
         //set components
-        followTransform = GameObject.Find("Follow Target").transform;
+        followTransform = GameObject.Find("Camera Follow Target").transform;
         playerStats = GameObject.Find("Player").GetComponent<PlayerStats>();
         normalCamera = GameObject.Find("Normal Camera").GetComponent<CinemachineCamera>();
         combatCamera = GameObject.Find("Combat Camera").GetComponent<CinemachineCamera>();
@@ -114,7 +114,7 @@ public class PlayerCamera : MonoBehaviour
 
         //yaw for player pitch on camera+
 
-        if (playerStats.combatMode)
+        if (playerStats.isOnCombatMode)
         {
             //update mouse delta
             mouseDeltaX = Input.GetAxis("Mouse X") * xSensibility * Time.deltaTime;

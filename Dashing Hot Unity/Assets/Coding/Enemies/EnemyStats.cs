@@ -17,12 +17,14 @@ public class EnemyStats : CharacterStats
 
     #region METHODS
 
-    public override void SetState<TState>(TState targetState)
+
+    #endregion
+
+    #region RUNNING
+
+    private void Start()
     {
-        if (targetState is States newState)
-        {
-            state = newState;
-        }
+        CharacterStart();
     }
 
     #endregion

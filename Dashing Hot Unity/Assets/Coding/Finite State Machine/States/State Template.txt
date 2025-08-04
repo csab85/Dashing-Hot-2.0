@@ -1,0 +1,46 @@
+using UnityEngine;
+
+public class State : IState
+{
+    #region FIELDS
+
+    //Dependencies
+
+    //Configurations
+
+    //Runtime data
+
+    #endregion
+
+    #region METHODS
+
+    //constructor
+    public State(StateDependencies.dependencies)
+    {
+
+    }
+
+    public bool Enter()
+    {
+        Debug.Log("Entered State");
+        return true;
+    }
+
+    public void Update()
+    {
+        Debug.Log("Updating State");
+    }
+
+    public void FixedUpdate()
+    {
+        Debug.Log("Fixed Updating State");
+    }
+
+    public bool Exit()
+    {
+        Debug.Log("Exited State");
+        return true;
+    }
+
+    #endregion
+}
