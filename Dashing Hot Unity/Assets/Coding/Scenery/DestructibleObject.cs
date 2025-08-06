@@ -1,57 +1,47 @@
-//using System.Collections;
-//using System.Collections.Generic;
-//using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 
-//public class DestructibleObject : MonoBehaviour
-//{
-//    #region VARS
+public class DestructibleObject : MonoBehaviour
+{
+    #region VARS
 
-//    BoxCollider boxCollider;
+    float _punchForce;
 
-//    [SerializeField] float punchForce;
+    #endregion
 
-//    #endregion
+    #region EVENTS
 
-//    #region EVENTS
+    private void OnCollisionEnter(Collision collision)
+    {
+        //if has character script
+        if (collision.gameObject.GetComponent<CharacterStats>() is CharacterStats characterStats)
+        {
+            //if character is breaking objects
+            if (characterStats.IsBreakingObjects)
+            {
+                //activate broke version and unchild
+                GameObject brokeVersion = transform.GetChild(0).gameObject;
+                brokeVersion.SetActive(true);
+                brokeVersion.transform.parent = null;
 
-//    private void OnCollisionEnter(Collision collision)
-//    {
-//        //if has character script
-//        if (collision.gameObject.GetComponent<CharacterStats>() is CharacterStats characterStats)
-//        {
-//            //if character is dashing
-//            if (characterStats.dashing)
-//            {
-//                //activate broke version and unchild
-//                GameObject brokeVersion = transform.GetChild(0).gameObject;
-//                brokeVersion.SetActive(true);
-//                brokeVersion.transform.parent = null;
+                //add explosion force to each piece
+                foreach (Transform piece in brokeVersion.transform)
+                {
+                    _punchForce = transform.GetComponent<Rigidbody>().linearVelocity.magnitude;
 
-//                //get contact point
-//                Vector3 contactPoint = collision.contacts[0].point;
-                
-//                //add explosion force to each piece
-//                foreach(Transform piece in brokeVersion.transform)
-//                {
-//                    Vector3 direction = (piece.position - contactPoint).normalized;
+                    piece.GetComponent<Rigidbody>().AddExplosionForce(_punchForce * 30, collision.transform.position, 10);
 
-//                    piece.gameObject.GetComponent<Rigidbody>().AddForce(-(direction * punchForce), ForceMode.Impulse);
-//                }
+                }
 
-//                //destroy self
-//                Destroy(gameObject);
-//            }
-//        }
-//    }
+                print(collision.gameObject.name + _punchForce);
 
-//    #endregion
 
-//    #region RUNNING
+                //destroy self
+                Destroy(gameObject);
+            }
+        }
+    }
 
-//    private void Start()
-//    {
-//        BoxCollider boxCollider = GetComponent<BoxCollider>();
-//    }
-
-//    #endregion
-//}
+    #endregion
+}

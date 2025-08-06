@@ -797,7 +797,7 @@ Transform:
   m_GameObject: {fileID: 330585543}
   serializedVersion: 2
   m_LocalRotation: {x: 0.15212339, y: 0, z: 0, w: 0.98836154}
-  m_LocalPosition: {x: -8.544275, y: 5.007058, z: -10.227169}
+  m_LocalPosition: {x: -8.544275, y: 9.077059, z: -11.95717}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1410,7 +1410,7 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: c5c78e1d62bfce3498b2b060c48f5f19,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: -0.98
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: c5c78e1d62bfce3498b2b060c48f5f19,
         type: 3}
@@ -3096,7 +3096,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &949954659
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5137,7 +5137,7 @@ Transform:
   m_GameObject: {fileID: 2004385888}
   serializedVersion: 2
   m_LocalRotation: {x: 0.15212339, y: 0, z: 0, w: 0.98836154}
-  m_LocalPosition: {x: -8.544275, y: 5.007058, z: -10.227169}
+  m_LocalPosition: {x: -8.544275, y: 9.077059, z: -11.95717}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -5534,7 +5534,7 @@ GameObject:
   - component: {fileID: 2109844795}
   - component: {fileID: 2109844794}
   - component: {fileID: 2109844793}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Shooter Ragdoll
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5902,7 +5902,7 @@ Transform:
   m_GameObject: {fileID: 1676770240095486275}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -8.544275, y: 0, z: -0.69}
+  m_LocalPosition: {x: -8.544275, y: 4.07, z: -2.42}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -6009,9 +6009,9 @@ CapsuleCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.76317096
-  m_Height: 2.965725
+  m_Height: 3
   m_Direction: 1
-  m_Center: {x: 0, y: 1.5, z: 0.10741663}
+  m_Center: {x: 0, y: 1.5, z: 0}
 --- !u!54 &2021769933106895872
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -6054,7 +6054,7 @@ MonoBehaviour:
   _maxHealth: 100
   Acceleration: 50
   GroundFriction: 10
-  FallAcceleration: 20
+  FallAcceleration: 200
   PushForce: 50
   PushDuration: 0.4
   DashForce: 70

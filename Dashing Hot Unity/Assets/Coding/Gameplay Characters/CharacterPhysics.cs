@@ -127,7 +127,6 @@ public class CharacterPhysics : MonoBehaviour
         yield return new WaitForSeconds(_characterStats.FallDuration);
 
         transform.position = _HipBoneTransform.position;
-        print("bo" + gameObject);
         DisableRagdoll();
     }
 
@@ -206,12 +205,13 @@ public class CharacterPhysics : MonoBehaviour
         #region Ground Detection
 
         //check if on floor
-        _isGrounded = Physics.Raycast(transform.position, -transform.up, _groundCheckDistance, _groundLayerMask);
+        _isGrounded = Physics.Raycast(transform.position - new Vector3(0, .1f, 0), -transform.up, _groundCheckDistance, _groundLayerMask);
 
         //activate friction if on ground and not dashing/propelled
         if (!_characterStats.IsDashing && !_characterStats.IsPropelled)
         {
             _rigidbody.linearDamping = _isGrounded ? _characterStats.GroundFriction : 0;
+            print(_isGrounded);
         }
 
         #endregion

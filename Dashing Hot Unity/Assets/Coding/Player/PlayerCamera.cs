@@ -93,7 +93,7 @@ public class PlayerCamera : MonoBehaviour
 
     #endregion
 
-    #region RUNNING
+    #region UNITY LIFETIME
 
     private void Start()
     {
@@ -117,8 +117,8 @@ public class PlayerCamera : MonoBehaviour
         if (playerStats.isOnCombatMode)
         {
             //update mouse delta
-            mouseDeltaX = Input.GetAxis("Mouse X") * xSensibility * Time.deltaTime;
-            mouseDeltaY = Input.GetAxis("Mouse Y") * ySensibility * Time.deltaTime;
+            mouseDeltaX = Input.GetAxis("Mouse X") * xSensibility * 10 * Time.deltaTime;
+            mouseDeltaY = Input.GetAxis("Mouse Y") * ySensibility * 10 * Time.deltaTime;
 
             //if mouse moving
             if (mouseDeltaX != 0 | mouseDeltaY != 0)
